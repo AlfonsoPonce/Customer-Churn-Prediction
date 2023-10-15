@@ -6,6 +6,7 @@ EDA_DATA_FOLDER = Path('./images/EDA/')
 RESULTS_FOLDER = Path('./images/results')
 MODEL_FOLDER = Path('./models/')
 
+RESPONSE_VARIABLE = 'Churn'
 
 CAT_COLUMNS_LIST = [
     'Gender',
