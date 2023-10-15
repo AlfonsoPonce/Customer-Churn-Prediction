@@ -14,6 +14,8 @@ Date: 14/10/2023
 
 import os
 from pathlib import Path
+
+import pytest
 import shap
 import joblib
 import pandas as pd
@@ -57,6 +59,7 @@ def perform_eda(df):
             None
     '''
 
+
     # EDA console prints
     print('===============================')
     print('Data first rows:')
@@ -77,7 +80,7 @@ def perform_eda(df):
     C.EDA_DATA_FOLDER.mkdir(exist_ok=True, parents=True)
 
     plt.figure(figsize=(20, 10))
-    df['Churn'].hist()
+    df[C.RESPONSE_VARIABLE].hist()
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath(
         'Target_Variable_Histogram.png')))
 
@@ -88,7 +91,7 @@ def perform_eda(df):
     plt.figure(figsize=(20, 10))
     df.Marital_Status.value_counts('normalize').plot(kind='bar')
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath(
-        'Target_Variable_Histogram.png')))
+        'Marital_Status_Histogram.png')))
 
     plt.figure(figsize=(20, 10))
     sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
@@ -139,10 +142,11 @@ def perform_feature_engineering(df, response):
               data_y_test: y testing data
     '''
 
+
     # dividing data into x and y
     df = encoder_helper(df, C.CAT_COLUMNS_LIST, response)
 
-    data_y = df['Churn']
+    data_y = df[C.RESPONSE_VARIABLE]
     data_x = pd.DataFrame()
     data_x[C.KEEP_COLS_LIST] = df[C.KEEP_COLS_LIST]
 
@@ -347,9 +351,9 @@ def train_models(x_train, x_test, y_train, y_test):
 
 if __name__ == '__main__':
     dataframe = import_data(str(C.DATA_PATH))
-    dataframe['Churn'] = dataframe['Attrition_Flag'].apply(
+    dataframe[C.RESPONSE_VARIABLE] = dataframe["Attrition_Flag"].apply(
         lambda val: 0 if val == "Existing Customer" else 1)
     perform_eda(dataframe)
     x_train_data, x_test_data, y_train_data, y_test_data = perform_feature_engineering(
-        dataframe, 'Churn')
+        dataframe, C.RESPONSE_VARIABLE)
     train_models(x_train_data, x_test_data, y_train_data, y_test_data)
