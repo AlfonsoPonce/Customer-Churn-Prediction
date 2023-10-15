@@ -1,3 +1,11 @@
+'''
+This Script test functions in churn_library.py
+
+Author: Alfonso Ponce
+Date: 14/10/2023
+'''
+
+
 import os
 import logging
 import churn_library_solution as cls
@@ -31,6 +39,7 @@ def test_eda(perform_eda):
 	'''
 	test perform eda function
 	'''
+
 
 
 def test_encoder_helper(encoder_helper):
