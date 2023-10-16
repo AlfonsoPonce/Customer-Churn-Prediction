@@ -13,9 +13,7 @@ Date: 14/10/2023
 # import libraries
 
 import os
-from pathlib import Path
 
-import pytest
 import shap
 import joblib
 import pandas as pd
@@ -44,95 +42,94 @@ def import_data(pth):
     input:
             pth: a path to the csv
     output:
-            df: pandas dataframe
+            datafr: pandas dataframe
     '''
     return pd.read_csv(pth)
 
 
-def perform_eda(df):
+def perform_eda(datafr):
     '''
-    perform eda on df and save figures to images folder
+    perform eda on datafr and save figures to images folder
     input:
-            df: pandas dataframe
+            datafr: pandas dataframe
 
     output:
             None
     '''
 
-
     # EDA console prints
     print('===============================')
     print('Data first rows:')
-    print(df.head())
+    print(datafr.head())
 
     print('===============================')
-    print(f'Data shape: {df.shape}')
+    print(f'Data shape: {datafr.shape}')
 
     print('===============================')
     print('Number of null values per variable:')
-    print(df.isnull().sum())
+    print(datafr.isnull().sum())
 
     print('===============================')
     print('Descriptive Statistics Summary')
-    print(df.describe())
+    print(datafr.describe())
 
     # Creating and storing plots
     C.EDA_DATA_FOLDER.mkdir(exist_ok=True, parents=True)
 
     plt.figure(figsize=(20, 10))
-    df[C.RESPONSE_VARIABLE].hist()
+    datafr[C.RESPONSE_VARIABLE].hist()
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath(
         'Target_Variable_Histogram.png')))
 
     plt.figure(figsize=(20, 10))
-    df['Customer_Age'].hist()
+    datafr['Customer_Age'].hist()
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath('Customer_Age_Histogram.png')))
 
     plt.figure(figsize=(20, 10))
-    df.Marital_Status.value_counts('normalize').plot(kind='bar')
+    datafr.Marital_Status.value_counts('normalize').plot(kind='bar')
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath(
         'Marital_Status_Histogram.png')))
 
     plt.figure(figsize=(20, 10))
-    sns.histplot(df['Total_Trans_Ct'], stat='density', kde=True)
+    sns.histplot(datafr['Total_Trans_Ct'], stat='density', kde=True)
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath('Total_Trans_Ct_KDE.png')))
 
     plt.figure(figsize=(20, 10))
-    sns.heatmap(df.corr(), annot=False, cmap='Dark2_r', linewidths=2)
+    sns.heatmap(datafr.corr(), annot=False, cmap='Dark2_r', linewidths=2)
     plt.savefig(str(C.EDA_DATA_FOLDER.joinpath('Heatmap.png')))
 
 
-def encoder_helper(df, category_lst, response):
+def encoder_helper(datafr, category_lst, response):
     '''
     helper function to turn each categorical column into a new column with
     proportion of churn for each category - associated with cell 15 from the notebook
 
     input:
-            df: pandas dataframe
+            datafr: pandas dataframe
             category_lst: list of columns that contain categorical features
             response: string of response name
 
 
     output:
-            df: pandas dataframe with new columns for
+            datafr: pandas dataframe with new columns for
     '''
 
     for column in category_lst:
         val_list = []
-        gender_groups = df.groupby(column).mean()[response]
+        gender_groups = datafr.groupby(column).mean()[response]
 
-        for val in df[column]:
+        for val in datafr[column]:
             val_list.append(gender_groups.loc[val])
 
-        df[f'{column}_{response}'] = val_list
+        datafr[f'{column}_{response}'] = val_list
 
-    return df
+    return datafr
 
 
-def perform_feature_engineering(df, response):
+def perform_feature_engineering(datafr, response):
     '''
     input:
-              df: pandas dataframe
+              datafr: pandas dataframe
               response: string of response name
 
     output:
@@ -142,13 +139,12 @@ def perform_feature_engineering(df, response):
               data_y_test: y testing data
     '''
 
-
     # dividing data into x and y
-    df = encoder_helper(df, C.CAT_COLUMNS_LIST, response)
+    datafr = encoder_helper(datafr, C.CAT_COLUMNS_LIST, response)
 
-    data_y = df[C.RESPONSE_VARIABLE]
+    data_y = datafr[C.RESPONSE_VARIABLE]
     data_x = pd.DataFrame()
-    data_x[C.KEEP_COLS_LIST] = df[C.KEEP_COLS_LIST]
+    data_x[C.KEEP_COLS_LIST] = datafr[C.KEEP_COLS_LIST]
 
     # train test split
     data_x_train, data_x_test, data_y_train, data_y_test = train_test_split(
@@ -191,7 +187,6 @@ def classification_report_image(y_train,
              fontproperties='monospace')  # approach improved by OP -> monospace!
     plt.axis('off')
     plt.savefig(str(C.RESULTS_FOLDER.joinpath('Random_Forest_Results.png')))
-
 
     plt.clf()
     plt.rc('figure', figsize=(5, 5))

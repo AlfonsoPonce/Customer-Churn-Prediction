@@ -17,7 +17,7 @@ It tries to follow best coding practices by adapting code from `churn_notebook.i
 
 1. Install packages:
 ```bash
-pip install --file requirements_py3.6.txt
+pip install -r requirements_py3.6.txt
 ```
 2. Run churn prediction:
 ```bash
