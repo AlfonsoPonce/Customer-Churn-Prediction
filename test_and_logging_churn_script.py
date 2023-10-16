@@ -16,11 +16,25 @@ from churn_library import import_data, perform_eda, \
 import constants as C
 # import churn_library_solution as cls
 
-logging.basicConfig(
-    filename='./logs/churn_library.log',
-    level=logging.INFO,
-    filemode='w',
-    format='%(name)s - %(levelname)s - %(message)s')
+
+def setup_logger(name, log_file, level=logging.INFO):
+    "To setup as many loggers as you want"
+    formatter = logging.Formatter('%(asctime)-15s - %(name)s - %(levelname)s - %(message)s')
+
+    handler = logging.FileHandler(log_file)
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+
+    return logger
+
+
+logger = setup_logger('test_logger', './logs/tests_churn_library.log')
+logging.getLogger('main_logger').disabled = True
+
+
 
 
 @pytest.fixture
@@ -76,16 +90,16 @@ def test_import(data_path):
     '''
     try:
         df = import_data(data_path)
-        logging.info("Testing import_data: SUCCESS")
+        logger.info("Testing import_data: SUCCESS")
     except FileNotFoundError as err:
-        logging.error("Testing import_eda: The file wasn't found")
+        logger.error("Testing import_eda: The file wasn't found")
         raise err
 
     try:
         assert df.shape[0] > 0
         assert df.shape[1] > 0
     except AssertionError as err:
-        logging.error(
+        logger.error(
             "Testing import_data: The file doesn't appear to have rows and columns")
         raise err
 
@@ -96,7 +110,7 @@ def test_eda(df):
     '''
 
     try:
-        logging.info("Trying to perform EDA")
+        logger.info("Trying to perform EDA")
         perform_eda(df)
         for image_name in ["Customer_Age_Histogram",
                            "Marital_Status_Histogram",
@@ -105,10 +119,10 @@ def test_eda(df):
                            "Heatmap"]:
 
             with open("images/eda/%s.png" % image_name, "r"):
-                logging.info("EDA Performance: SUCCESS")
+                logger.info("EDA Performance: SUCCESS")
 
     except Exception as err:
-        logging.error("Error while  in eda performance")
+        logger.error("Error while  in eda performance")
         raise err
 
 
@@ -118,9 +132,9 @@ def test_encoder_helper(df, category_list, response):
     '''
 
     try:
-        logging.info("Encoding Dataframe")
+        logger.info("Encoding Dataframe")
         encoder_helper(df, category_list, response)
-        logging.info("Encoding Dataframe: SUCCESS")
+        logger.info("Encoding Dataframe: SUCCESS")
     except Exception as err:
         logging.error("Error while encoding dataframe")
         raise err
@@ -132,11 +146,11 @@ def test_perform_feature_engineering(df, response):
     '''
 
     try:
-        logging.info("Trying Feature Engineering")
+        logger.info("Trying Feature Engineering")
         perform_feature_engineering(df, response)
-        logging.info("Feature Engineering: SUCCESS")
+        logger.info("Feature Engineering: SUCCESS")
     except Exception as err:
-        logging.error("Error while Feature engineering")
+        logger.error("Error while Feature engineering")
         raise err
 
 
@@ -145,12 +159,12 @@ def test_train_models(model_data):
     test train_models
     '''
     try:
-        logging.info("Trying to train models and get results")
+        logger.info("Trying to train models and get results")
         x_train, x_test, y_train, y_test = model_data
         train_models(x_train, x_test, y_train, y_test)
-        logging.info("Training models: SUCCESS")
+        logger.info("Training models: SUCCESS")
     except Exception as err:
-        logging.error("Error while trying to train models")
+        logger.error("Error while trying to train models")
         raise err
 
 

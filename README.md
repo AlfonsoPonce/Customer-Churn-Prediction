@@ -9,7 +9,7 @@ It tries to follow best coding practices by adapting code from `churn_notebook.i
 ## Files and data description
 1. ***churn_library.py***: 
 - A library of functions to find customers who are likely to churn.
-2. ***churn_script_logging_and_tests.py***:
+2. ***test_and_logging_churn_script.py***:
 - Contain unit tests for the *churn_library.py* functions. 
 - Log any errors and INFO messages. 
 
@@ -25,7 +25,7 @@ python churn_library.py
 ```
 3. Test churn prediction:
 ```bash
-python churn_script_logging_and_tests.py
+python test_and_logging_churn_script.py
 ```
 
 
