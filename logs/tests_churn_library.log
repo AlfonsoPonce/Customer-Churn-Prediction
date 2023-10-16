@@ -1,0 +1,13 @@
+2023-10-16 17:20:51,049 - test_logger - INFO - Testing import_data: SUCCESS
+2023-10-16 17:20:51,074 - test_logger - INFO - Trying to perform EDA
+2023-10-16 17:20:51,945 - test_logger - INFO - EDA Performance: SUCCESS
+2023-10-16 17:20:51,950 - test_logger - INFO - EDA Performance: SUCCESS
+2023-10-16 17:20:51,953 - test_logger - INFO - EDA Performance: SUCCESS
+2023-10-16 17:20:51,955 - test_logger - INFO - EDA Performance: SUCCESS
+2023-10-16 17:20:51,958 - test_logger - INFO - EDA Performance: SUCCESS
+2023-10-16 17:20:51,979 - test_logger - INFO - Encoding Dataframe
+2023-10-16 17:20:52,242 - test_logger - INFO - Encoding Dataframe: SUCCESS
+2023-10-16 17:20:52,264 - test_logger - INFO - Trying Feature Engineering
+2023-10-16 17:20:52,534 - test_logger - INFO - Feature Engineering: SUCCESS
+2023-10-16 17:20:52,826 - test_logger - INFO - Trying to train models and get results
+2023-10-16 17:24:51,518 - test_logger - INFO - Training models: SUCCESS
